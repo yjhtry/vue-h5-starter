@@ -18,7 +18,7 @@ watchEffect(() => {
       v-if="show"
       :class="$attrs.class"
       :style="{ zIndex }"
-      bg="[rgba(0,_0,_0,_0.7)]"
+      bg-black:90
       class="fixed left-0 top-0 h-screen w-screen"
     >
       <slot name="overlay-content" />

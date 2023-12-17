@@ -52,9 +52,9 @@
     "medi",
     "unocss"
   ],
-  "files.exclude": {
-    "**/node_modules": true
-  },
+  // "files.exclude": {
+  //   "**/node_modules": true
+  // },
   "typescript.tsdk": "node_modules/typescript/lib",
   "i18n-ally.keystyle": "nested",
   "i18n-ally.sourceLanguage": "en",

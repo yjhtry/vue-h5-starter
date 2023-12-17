@@ -14,7 +14,7 @@ function onBack() {
 <template>
   <div cursor-pointer @click.stop="onBack">
     <slot>
-      <a bg="[rgba(0,_0,_0,_0.3)]" class="rounded-1 p-0.5" icon-btn>
+      <a bg-black:30 class="rounded-1 p-0.5" icon-btn>
         <div i-carbon-arrow-left text-white />
       </a>
     </slot>
