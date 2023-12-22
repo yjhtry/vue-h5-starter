@@ -37,7 +37,7 @@ export function useJSBridge() {
 
       return new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
-          throw new Error('Time out')
+          reject(new Error('Time out'))
         }, JSBridge_CALL_TIMEOUT)
 
         try {
