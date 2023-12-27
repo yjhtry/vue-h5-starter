@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router/auto'
+import { createHead } from '@vueuse/head'
 import App from './App.vue'
 
 import '@unocss/reset/tailwind.css'
@@ -8,6 +9,7 @@ import 'uno.css'
 import type { UserModule } from './types'
 
 const app = createApp(App)
+const head = createHead()
 
 app.config.errorHandler = (err, instance, info) => {
   let message = ''
@@ -21,6 +23,7 @@ const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
 })
 app.use(router)
+app.use(head)
 
 Object.values(import.meta.glob<{ install: UserModule }>('./modules/*.ts', { eager: true }))
   .forEach((i) => {
