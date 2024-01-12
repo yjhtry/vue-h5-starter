@@ -46,7 +46,7 @@ interface RpcParams<T> {
  */
 interface EndCall {
   /**
-   * !! master 未实现的方法调用
+   * !! 未实现的方法调用
    *  这些方法可能爱他app实现 或者更高的mater app版本实现 具体需要开发者测试
    */
   <E extends NotImplEventName>(eventName: E): Promise<{ error: 1, errorMessage: 'not implemented!' }>
