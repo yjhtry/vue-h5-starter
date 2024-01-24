@@ -1,18 +1,16 @@
 import type { MaybeComputedRef } from '@vueuse/head'
 
-type _RpcParams = Omit<RpcParams<any>, 'operationUrl'>
-
-export function useRpcFetch<T, U extends _RpcParams = _RpcParams>(url: MaybeComputedRef<string>, { params }: { params: U }) {
+export function useRpcFetch<T, U extends RpcParams<any> = RpcParams<any>>(path: MaybeComputedRef<string>, { params }: { params: U }) {
   const loading = ref(false)
   const data = ref<T>()
   const error = ref('')
 
   const toFetch = () => {
-    const operationUrl = toValue(url)
+    const url = toValue(path)
 
     loading.value = true
 
-    window.JSBridge.call<T>('medi_rpc', { operationUrl, ...params })
+    window.JSBridge.call<T>('medi_rpc', { ...params, url })
       .then((res) => {
         invariant(!res.success, res.message || 'fetch error')
 
