@@ -44,7 +44,7 @@ export function useJSBridge() {
           originCall(...args, (res: any) => {
             clearTimeout(timer)
             if (isRpc)
-              res = safeJsonParse(res?.data) || { success: false }
+              res = safeJsonParse(res?.data) || { ...res, success: false }
 
             resolve(res)
           })
