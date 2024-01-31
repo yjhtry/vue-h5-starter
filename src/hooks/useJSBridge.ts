@@ -15,47 +15,49 @@ export function useJSBridge() {
     ready.value = true
   }
 
-  if (!ready.value)
-    window.document.addEventListener('JSBridgeReady', handleJSBridgeReady)
+  watchEffect(() => {
+    if (!ready.value)
+      window.document.addEventListener('JSBridgeReady', handleJSBridgeReady)
 
-  // 当在非端内环境使用mock数据进行开发
-  if (SKIP_END_CONTEXT && !window.JSBridge?.call)
-    window.JSBridge = { call: () => { } } as any
+    // 当在非端内环境使用mock数据进行开发
+    if (SKIP_END_CONTEXT && !window.JSBridge?.call)
+      window.JSBridge = { call: () => { } } as any
 
-  // 重写 JSBridge.call 将回调形式统一修改成 Promise
-  if (ready.value && !isInitd) {
-    isInitd = true
-    const originCall = window.JSBridge.call.bind(window.JSBridge) as any
+    // 重写 JSBridge.call 将回调形式统一修改成 Promise
+    if (ready.value && !isInitd) {
+      isInitd = true
+      const originCall = window.JSBridge.call.bind(window.JSBridge) as any
 
-    window.JSBridge.call = ((...args: any) => {
-      const [eventName, params] = args
-      const isRpc = eventName === 'medi_rpc'
+      window.JSBridge.call = ((...args: any) => {
+        const [eventName, params] = args
+        const isRpc = eventName === 'medi_rpc'
 
-      // 处理需要mock 的medi_rpc调用
-      if (isMockEnabled && isRpc && params?.__useMock)
-        return mockFetch(params)
+        // 处理需要mock 的medi_rpc调用
+        if (isMockEnabled && isRpc && params?.__useMock)
+          return mockFetch(params)
 
-      return new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-          reject(new Error('Time out'))
-        }, JSBridge_CALL_TIMEOUT)
+        return new Promise((resolve, reject) => {
+          const timer = setTimeout(() => {
+            reject(new Error('Time out'))
+          }, JSBridge_CALL_TIMEOUT)
 
-        try {
-          originCall(...args, (res: any) => {
+          try {
+            originCall(...args, (res: any) => {
+              clearTimeout(timer)
+              if (isRpc)
+                res = safeJsonParse(res?.data) || { ...res, success: false }
+
+              resolve(res)
+            })
+          }
+          catch (error) {
             clearTimeout(timer)
-            if (isRpc)
-              res = safeJsonParse(res?.data) || { ...res, success: false }
-
-            resolve(res)
-          })
-        }
-        catch (error) {
-          clearTimeout(timer)
-          reject(error)
-        }
-      })
-    }) as any
-  }
+            reject(error)
+          }
+        })
+      }) as any
+    }
+  })
 
   onScopeDispose(() => {
     window.document.removeEventListener('JSBridgeReady', handleJSBridgeReady)
