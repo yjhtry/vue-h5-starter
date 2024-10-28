@@ -1,12 +1,13 @@
-import { createApp } from 'vue'
-import { createRouter, createWebHashHistory } from 'vue-router/auto'
+import type { UserModule } from './types'
 import { createHead } from '@vueuse/head'
-import App from './App.vue'
+import { createApp } from 'vue'
+import { createRouter, createWebHashHistory } from 'vue-router'
+import { routes } from 'vue-router/auto-routes'
 
+import App from './App.vue'
 import '@unocss/reset/tailwind.css'
 import './styles/main.css'
 import 'uno.css'
-import type { UserModule } from './types'
 
 const app = createApp(App)
 const head = createHead()
@@ -20,8 +21,10 @@ app.config.errorHandler = (err, instance, info) => {
 }
 
 const router = createRouter({
+  routes,
   history: createWebHashHistory(import.meta.env.BASE_URL),
 })
+
 app.use(router)
 app.use(head)
 

@@ -2,17 +2,17 @@
 
 import path from 'node:path'
 import process from 'node:process'
-import { defineConfig, loadEnv } from 'vite'
-import Vue from '@vitejs/plugin-vue'
-import Components from 'unplugin-vue-components/vite'
-import AutoImport from 'unplugin-auto-import/vite'
 import VueI18n from '@intlify/unplugin-vue-i18n/vite'
-import VueDevTools from 'vite-plugin-vue-devtools'
+import Vue from '@vitejs/plugin-vue'
 import UnoCSS from 'unocss/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
 import VueMacros from 'unplugin-vue-macros/vite'
-import VueRouter from 'unplugin-vue-router/vite'
 import { VueRouterAutoImports } from 'unplugin-vue-router'
+import VueRouter from 'unplugin-vue-router/vite'
+import { defineConfig, loadEnv } from 'vite'
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
+import VueDevTools from 'vite-plugin-vue-devtools'
 
 // import eruda from 'vite-plugin-eruda'
 
@@ -101,7 +101,7 @@ export default defineConfig(({ mode }) => {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `@import '~/styles/mixin.scss';`,
+          additionalData: `@use '~/styles/mixin.scss' as *;`,
         },
       },
     },
